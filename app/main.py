@@ -34,8 +34,8 @@ def health() -> dict:
     return {
         "status": "ok",
         "use_mocks": settings.use_mocks,
-        "llm_backend": settings.llm_backend,
-        "model": settings.anthropic_model,
+        "llm_backend_setting": settings.llm_backend,
+        "llm_backend_active": settings.active_llm_backend(),
     }
 
 
