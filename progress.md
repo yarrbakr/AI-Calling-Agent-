@@ -28,14 +28,20 @@ brain is **Claude**; speech is **local**. The **hero** feature is the **Recruitm
     data (3 clients, 4 jobs, 6 candidates, 4 leads, 3 contacts), FastAPI app (`/health`,
     `/api/stats`, `/`). Verified: DB seeds and the app boots green via TestClient.
   - Core deps appended to root `requirements.txt` and installed in the shared `.venv`.
+- [x] [2026-06-30] **Phase 1 — Foundations** (branch `feat/phase1-foundations`):
+  - Swappable **LLM brain** behind one port — `mistral` (free, default), `claude`,
+    `ollama`, `canned` (offline $0) — with a tool-use loop and `auto` backend selection.
+  - All **integration ports + Mock adapters**: CRM (Zoho-shaped), ATS (Ceipal-shaped, incl.
+    candidate match scoring + RTR), messaging (SMS/WhatsApp), email, and the telephony audio
+    contract. `integrations/factory.py` picks mock-by-default.
+  - Verified end-to-end: candidate search ranked the cleared Java candidate #1, RTR captured,
+    multi-channel sends hit `data/outbox/`; `/health` reports brain + adapters.
 
 ## In Progress
-- [ ] **Phase 1 — Foundations:** LLM port (Claude + canned impls, tool-use); all ports
-  (telephony, crm, ats, messaging, email) + Mock adapters; health/stat dashboard.
+- [ ] **Phase 2 — HERO Voice Screening Agent** (next): browser softphone, STT→LLM→TTS,
+  VAD barge-in, screening script, RTR capture, live dashboard, `scripts/demo_call.py`.
 
 ## Future Phases
-- [ ] **Phase 2 — HERO Voice Screening Agent:** browser softphone, STT→Claude→TTS, VAD barge-in,
-  screening script, RTR capture, transcript + outcome to MockCeipal, live dashboard, demo script.
 - [ ] **Phase 3 — Recruitment non-voice:** Recruiter Assistant (Boolean + search + rank),
   Candidate Relevancy (resume↔job scoring).
 - [ ] **Phase 4 — Sales + AM agents:** lead qualification + scheduling; follow-up; AM requirements,
