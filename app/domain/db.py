@@ -29,12 +29,14 @@ def init_db() -> None:
     SQLModel.metadata.create_all(engine)
 
 
+# expire_on_commit=False so records returned by the Mock adapters stay readable
+# after their session closes (our models are flat — no lazy relationships).
 def get_session() -> Iterator[Session]:
     """FastAPI dependency: yields a session and closes it afterwards."""
-    with Session(engine) as session:
+    with Session(engine, expire_on_commit=False) as session:
         yield session
 
 
 def session() -> Session:
     """Standalone session for scripts/agents (use as a context manager)."""
-    return Session(engine)
+    return Session(engine, expire_on_commit=False)

@@ -35,14 +35,19 @@ class Settings(BaseSettings):
 
     # --- Master switches ------------------------------------------------------
     use_mocks: bool = True            # True => all ports use Mock adapters
-    llm_backend: str = "claude"       # "claude" | "canned" | "ollama"
+    # auto => prefer free Mistral -> Claude -> offline canned (see active_llm_backend):
+    llm_backend: str = "auto"         # auto | mistral | claude | ollama | canned
 
     # --- LLM brain ------------------------------------------------------------
+    # Mistral (free "Experiment" tier supports tool-use) — preferred real brain at $0:
+    mistral_api_key: str = ""
+    mistral_model: str = "mistral-large-latest"
+    mistral_model_realtime: str = "mistral-small-latest"   # lower latency for live calls
+    # Claude — premium swap (small per-call cost):
     anthropic_api_key: str = ""
-    # Quality default for batch/agent reasoning:
     anthropic_model: str = "claude-opus-4-8"
-    # Lower-latency model recommended for live, turn-by-turn calls:
     anthropic_model_realtime: str = "claude-sonnet-4-6"
+    # Local Ollama — truly $0/offline once it's stable on this machine:
     ollama_host: str = "http://localhost:11434"
     ollama_model: str = "deepseek-r1:14b"
 
@@ -82,6 +87,22 @@ class Settings(BaseSettings):
     @property
     def db_url(self) -> str:
         return f"sqlite:///{DB_PATH}"
+
+    def active_llm_backend(self) -> str:
+        """Resolve the concrete backend, honoring `auto` and falling back to
+        `canned` when a chosen provider has no key."""
+        b = (self.llm_backend or "auto").lower()
+        if b == "auto":
+            if self.mistral_api_key:
+                return "mistral"
+            if self.anthropic_api_key:
+                return "claude"
+            return "canned"
+        if b == "mistral" and not self.mistral_api_key:
+            return "canned"
+        if b == "claude" and not self.anthropic_api_key:
+            return "canned"
+        return b
 
     def crm_is_real(self) -> bool:
         return not self.use_mocks and bool(self.zoho_client_id and self.zoho_refresh_token)

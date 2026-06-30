@@ -11,14 +11,15 @@ still holding structured data (skills, payloads, etc.).
 
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Any, Optional
 
 from sqlmodel import JSON, Column, Field, SQLModel
 
 
 def _now() -> datetime:
-    return datetime.utcnow()
+    # Naive UTC, avoiding the deprecated datetime.utcnow().
+    return datetime.now(timezone.utc).replace(tzinfo=None)
 
 
 # --------------------------------------------------------------------------- #
