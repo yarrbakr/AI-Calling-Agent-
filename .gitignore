@@ -11,3 +11,13 @@ __pycache__/
 *.log
 recordings/
 tmp/
+
+# App data (rebuildable from data/seed via scripts/seed_db.py)
+data/app.db
+data/outbox/
+*.sqlite3
+
+# Python / tooling
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/

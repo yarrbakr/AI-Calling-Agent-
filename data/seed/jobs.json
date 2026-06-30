@@ -1,0 +1,54 @@
+[
+  {
+    "title": "Senior Java Developer",
+    "client_name": "Federal Systems Integrators LLC",
+    "location": "Washington, DC",
+    "remote": false,
+    "clearance": "Secret",
+    "employment_type": "C2C",
+    "min_years": 7,
+    "pay_rate": "$75/hr C2C",
+    "skills": ["Java", "Spring Boot", "Microservices", "AWS", "REST", "Kafka"],
+    "description": "Build and modernize microservices for a DoD case-management platform. Must hold an active Secret clearance and have strong Spring Boot + AWS experience.",
+    "status": "open"
+  },
+  {
+    "title": "AWS Cloud Engineer",
+    "client_name": "GovCloud Solutions Inc",
+    "location": "Remote (US)",
+    "remote": true,
+    "clearance": "Public Trust",
+    "employment_type": "W2",
+    "min_years": 5,
+    "pay_rate": "$70/hr W2",
+    "skills": ["AWS", "Terraform", "Kubernetes", "CI/CD", "Python", "Docker"],
+    "description": "Own IaC and EKS workloads for a FedRAMP environment. Terraform + Kubernetes required; Public Trust eligibility needed.",
+    "status": "open"
+  },
+  {
+    "title": "Cybersecurity Analyst (SOC)",
+    "client_name": "Patriot Defense Technologies",
+    "location": "Huntsville, AL",
+    "remote": false,
+    "clearance": "Top Secret",
+    "employment_type": "W2",
+    "min_years": 4,
+    "pay_rate": "$65/hr W2",
+    "skills": ["Splunk", "SIEM", "Incident Response", "NIST", "Python"],
+    "description": "Tier-2 SOC analyst for a classified network. Active Top Secret required; Splunk + incident response core.",
+    "status": "open"
+  },
+  {
+    "title": "ServiceNow Developer",
+    "client_name": "Federal Systems Integrators LLC",
+    "location": "Remote (US)",
+    "remote": true,
+    "clearance": "Public Trust",
+    "employment_type": "C2C",
+    "min_years": 3,
+    "pay_rate": "$60/hr C2C",
+    "skills": ["ServiceNow", "ITSM", "JavaScript", "Flow Designer", "REST"],
+    "description": "ITSM build-out on ServiceNow: catalog items, Flow Designer, integrations. Public Trust eligibility required.",
+    "status": "open"
+  }
+]

@@ -1,0 +1,23 @@
+[
+  {
+    "name": "Karen Mills",
+    "title": "Delivery Manager",
+    "phone": "+1-202-555-0301",
+    "email": "karen.mills@example.com",
+    "client_name": "Federal Systems Integrators LLC"
+  },
+  {
+    "name": "Paul Nguyen",
+    "title": "Engineering Lead",
+    "phone": "+1-571-555-0312",
+    "email": "paul.nguyen@example.com",
+    "client_name": "GovCloud Solutions Inc"
+  },
+  {
+    "name": "Rachel Adams",
+    "title": "HR Director",
+    "phone": "+1-256-555-0324",
+    "email": "rachel.adams@example.com",
+    "client_name": "Patriot Defense Technologies"
+  }
+]
