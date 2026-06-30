@@ -2,7 +2,8 @@
 
 > Bible of this project. Reflects current reality. Linked from this project's
 > [CLAUDE.md](CLAUDE.md). Keep entries dated and current as work moves planned → done.
-> A ticked `- [x]` item = merged to `main` (push pending until the GitHub remote is set).
+> A ticked `- [x]` item = merged to `main` and pushed to GitHub (`origin`:
+> [yarrbakr/AI-Calling-Agent-](https://github.com/yarrbakr/AI-Calling-Agent-)).
 
 ## Overview
 AI calling agent for a **federal staffing firm** (the Upwork brief) that integrates **Zoho CRM**,
@@ -57,8 +58,10 @@ fixed (the source URLs are listed in each report).
 - Free WhatsApp/SMS (Vonage sandbox) — `research/20260630-230006_free-whatsapp-sms-vonage-sandbox.md`
 
 ## Open items
-- [ ] GitHub remote — awaiting the repo URL; then `git remote add origin <url>` + push.
-- Ceipal stays mock (no free tier). Real Claude cost is tiny; `canned`/Ollama keep a $0 path.
+- [x] [2026-06-30] GitHub remote connected (`origin` → github.com/yarrbakr/AI-Calling-Agent-)
+  and `main` pushed.
+- Ceipal stays mock (no free tier). LLM brain is swappable; default prefers free Mistral →
+  Claude → `canned` (offline $0), so a real AI brain can run at $0.
 
 ## Workflow reminder
 - Every feature: **new branch → work → merge to `main` → (push when remote set)**, then tick here.
