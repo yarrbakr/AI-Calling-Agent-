@@ -18,6 +18,7 @@ from sqlmodel import Session, select
 from app.config import settings
 from app.domain import models as m
 from app.domain.db import engine, init_db
+from app.integrations.factory import get_ats, get_crm, get_email, get_messaging
 
 
 @asynccontextmanager
@@ -36,6 +37,12 @@ def health() -> dict:
         "use_mocks": settings.use_mocks,
         "llm_backend_setting": settings.llm_backend,
         "llm_backend_active": settings.active_llm_backend(),
+        "adapters": {
+            "crm": get_crm().name,
+            "ats": get_ats().name,
+            "messaging": get_messaging().name,
+            "email": get_email().name,
+        },
     }
 
 
