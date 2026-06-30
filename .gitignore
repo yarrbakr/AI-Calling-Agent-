@@ -1,0 +1,13 @@
+# Secrets / env
+.env
+*.key
+*.pem
+
+# Python noise
+__pycache__/
+*.pyc
+
+# Local artifacts / logs
+*.log
+recordings/
+tmp/
