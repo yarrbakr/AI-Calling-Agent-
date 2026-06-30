@@ -2,41 +2,63 @@
 
 > Bible of this project. Reflects current reality. Linked from this project's
 > [CLAUDE.md](CLAUDE.md). Keep entries dated and current as work moves planned → done.
-> A ticked `- [x]` item = merged to `main` and pushed to GitHub (see CLAUDE.md → Git & GitHub).
+> A ticked `- [x]` item = merged to `main` (push pending until the GitHub remote is set).
 
 ## Overview
-An AI voice calling agent that places/receives phone calls, holds a natural spoken conversation
-via STT → LLM (Claude) → TTS, and pursues a configurable goal (booking, lead qualification,
-reminders, support triage). Rebuild of an in-demand Upwork project as proof-of-work.
+AI calling agent for a **federal staffing firm** (the Upwork brief) that integrates **Zoho CRM**,
+**Ceipal ATS**, and **Vonage** to automate **Sales**, **Account Management**, and **Recruitment**.
+**Mock-first & ~$0**: every external system sits behind a port with a Mock adapter by default; the
+brain is **Claude**; speech is **local**. The **hero** feature is the **Recruitment Voice Agent**
+(call → screen → interest → **RTR**); all other agents are scaffolded with working logic.
 
-## Implemented (on `main`, pushed)
-- [x] [2026-06-30] Project scaffolding: `CLAUDE.md` (references root guide, carries the
-  non-negotiable rules) and this `progress.md`. (branch: initial commit on `main`)
-- [x] [2026-06-30] Git repo initialized with a project `.gitignore` and initial commit.
-  (branch: `main`)
+## Decisions locked (2026-06-30 — kickoff Q&A + approved plan)
+- **Integrations:** mock-first, swappable (Mock default; real adapter is env-gated).
+- **Scope:** hero Voice Screening Agent end-to-end + scaffold all other agents.
+- **Call demo:** local simulation (browser softphone); Vonage adapter built but optional.
+- **Brain:** Claude (`claude-opus-4-8`; `claude-sonnet-4-6` for live-call latency). Speech local
+  (faster-whisper + Piper + VAD). A `canned` LLM mode keeps a truly-$0 offline path.
+- **Architecture:** ports & adapters (hexagonal); SQLite = the mock CRM/ATS store; FastAPI app.
+
+## Implemented (on `main`)
+- [x] [2026-06-30] Project scaffolding: `CLAUDE.md` + this `progress.md`; git init + `.gitignore`.
+- [x] [2026-06-30] **Phase 0 — research & foundations** (branch `feat/phase0-foundations`):
+  - 6 cited research reports in `research/` (see Research section).
+  - App skeleton: `app/config.py` (mock switches), domain models + SQLite `db`, seed loader +
+    data (3 clients, 4 jobs, 6 candidates, 4 leads, 3 contacts), FastAPI app (`/health`,
+    `/api/stats`, `/`). Verified: DB seeds and the app boots green via TestClient.
+  - Core deps appended to root `requirements.txt` and installed in the shared `.venv`.
 
 ## In Progress
-- [ ] [2026-06-30] Connect the GitHub remote — awaiting the repo URL from the owner, then
-  `git remote add origin <url>` + `git push -u origin main`.
-- [ ] [2026-06-30] Defining scope and locking the stack (telephony, STT, TTS). Pending the
-  specific Upwork job text from the owner to tighten requirements.
+- [ ] **Phase 1 — Foundations:** LLM port (Claude + canned impls, tool-use); all ports
+  (telephony, crm, ats, messaging, email) + Mock adapters; health/stat dashboard.
 
 ## Future Phases
-- [ ] Telephony integration: place/receive a call and establish a real-time media stream.
-- [ ] Streaming STT: transcribe caller speech in real time with low latency.
-- [ ] LLM dialog: Claude (`claude-opus-4-8`) driving the conversation toward a configurable
-  goal, with system prompt + tool use for actions (e.g. booking).
-- [ ] Streaming TTS: speak responses back with low end-to-end latency; barge-in handling.
-- [ ] Orchestration: turn-taking, interruption, silence/timeouts, call-end conditions.
-- [ ] Outcome logging + transcript storage; basic metrics (duration, goal success).
-- [ ] Configurable scenarios (outbound vs inbound; per-goal prompts).
-- [ ] Demo: a recorded sample call for the portfolio.
+- [ ] **Phase 2 — HERO Voice Screening Agent:** browser softphone, STT→Claude→TTS, VAD barge-in,
+  screening script, RTR capture, transcript + outcome to MockCeipal, live dashboard, demo script.
+- [ ] **Phase 3 — Recruitment non-voice:** Recruiter Assistant (Boolean + search + rank),
+  Candidate Relevancy (resume↔job scoring).
+- [ ] **Phase 4 — Sales + AM agents:** lead qualification + scheduling; follow-up; AM requirements,
+  CSAT survey, dissatisfaction→escalation, candidate status updates.
+- [ ] **Phase 5 — Channels + sync:** email/SMS/WhatsApp (mock + real stubs); Zoho↔Ceipal sync.
+- [ ] **Phase 6 — Vonage real-call path (optional):** NCCO connect→websocket + ngrok, env-gated.
+- [ ] **Phase 7 — Polish:** dashboard, README, recorded demo call, tests, $0 verification.
+
+## Research
+Reports in [`research/`](research/), compiled 2026-06-30. **NOTE:** `research.py` (local Ollama)
+was unreliable this session — the desktop Ollama proxy on `:11434` hung the API and a dedicated
+`:11435` serve was unstable — so **at the owner's direction the reports were compiled via web
+search/fetch and synthesized directly, then cited**. Re-run them via `research.py` once Ollama is
+fixed (the source URLs are listed in each report).
+- Vonage voice (websocket media) — `research/20260630-230001_vonage-voice-api-realtime-websocket.md`
+- Zoho CRM API (self-client OAuth) — `research/20260630-230002_zoho-crm-api-v2-self-client-oauth.md`
+- Ceipal ATS v1 API — `research/20260630-230003_ceipal-ats-v1-api.md`
+- Real-time voice pipeline — `research/20260630-230004_realtime-voice-pipeline-whisper-piper-vad.md`
+- Right to Represent + screening — `research/20260630-230005_right-to-represent-rtr-screening.md`
+- Free WhatsApp/SMS (Vonage sandbox) — `research/20260630-230006_free-whatsapp-sms-vonage-sandbox.md`
+
+## Open items
+- [ ] GitHub remote — awaiting the repo URL; then `git remote add origin <url>` + push.
+- Ceipal stays mock (no free tier). Real Claude cost is tiny; `canned`/Ollama keep a $0 path.
 
 ## Workflow reminder
-- Every feature: **new branch → work → merge to `main` → push**, then tick its box here.
-- Use `research.py` (shared venv) for each stack decision; save the report into this folder
-  and reference it from this file before building on it.
-
-## Decisions / Notes
-- [2026-06-30] Stack not yet decided — no research run yet. Use `research.py` for each
-  component (telephony, STT, LLM, TTS) and record choices + rationale here before building.
+- Every feature: **new branch → work → merge to `main` → (push when remote set)**, then tick here.

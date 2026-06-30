@@ -1,0 +1,26 @@
+[
+  {
+    "name": "Federal Systems Integrators LLC",
+    "industry": "Federal IT Services",
+    "account_manager": "Dana Whitfield",
+    "health": "good",
+    "csat_avg": 4.4,
+    "notes": "Long-standing prime on a DoD modernization vehicle. Steady Java/ServiceNow demand."
+  },
+  {
+    "name": "GovCloud Solutions Inc",
+    "industry": "Cloud / GovTech",
+    "account_manager": "Marcus Lee",
+    "health": "at_risk",
+    "csat_avg": 2.9,
+    "notes": "Two recent submittals fell through; client frustrated with turnaround time. Watch closely."
+  },
+  {
+    "name": "Patriot Defense Technologies",
+    "industry": "Defense / Cybersecurity",
+    "account_manager": "Dana Whitfield",
+    "health": "good",
+    "csat_avg": 4.1,
+    "notes": "TS/SCI cleared work in Huntsville. High-value, security-sensitive placements."
+  }
+]

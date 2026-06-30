@@ -1,0 +1,47 @@
+[
+  {
+    "name": "Robert Hayes",
+    "company": "Apex GovTech",
+    "title": "VP of Engineering",
+    "phone": "+1-202-555-0210",
+    "email": "robert.hayes@example.com",
+    "source": "inbound",
+    "status": "new",
+    "need": "Needs 3 cleared Java contractors for a new federal award",
+    "notes": "Downloaded our capability statement. Award kickoff in ~6 weeks."
+  },
+  {
+    "name": "Linda Park",
+    "company": "Sterling Federal",
+    "title": "Director of Talent Acquisition",
+    "phone": "+1-571-555-0233",
+    "email": "linda.park@example.com",
+    "source": "list",
+    "status": "new",
+    "need": "Exploring staffing partners for surge hiring",
+    "notes": "Cold list. No prior contact."
+  },
+  {
+    "name": "Tom Bradley",
+    "company": "Vanguard Defense",
+    "title": "Program Manager",
+    "phone": "+1-256-555-0277",
+    "email": "tom.bradley@example.com",
+    "source": "referral",
+    "status": "qualifying",
+    "budget": "$1.2M staffing budget FY",
+    "need": "Cybersecurity analysts with TS",
+    "notes": "Referred by Patriot Defense. Warm."
+  },
+  {
+    "name": "Susan Reed",
+    "company": "Meridian Analytics",
+    "title": "CTO",
+    "phone": "+1-703-555-0291",
+    "email": "susan.reed@example.com",
+    "source": "event",
+    "status": "new",
+    "need": "Data engineers, unclear timeline",
+    "notes": "Met at GovCon expo. Curious but early."
+  }
+]
