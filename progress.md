@@ -16,8 +16,11 @@ brain is **Claude**; speech is **local**. The **hero** feature is the **Recruitm
 - **Integrations:** mock-first, swappable (Mock default; real adapter is env-gated).
 - **Scope:** hero Voice Screening Agent end-to-end + scaffold all other agents.
 - **Call demo:** local simulation (browser softphone); Vonage adapter built but optional.
-- **Brain:** Claude (`claude-opus-4-8`; `claude-sonnet-4-6` for live-call latency). Speech local
-  (faster-whisper + Piper + VAD). A `canned` LLM mode keeps a truly-$0 offline path.
+- **Brain:** Claude (`claude-opus-4-8`; `claude-sonnet-4-6` for live-call latency). A `canned` LLM
+  mode keeps a truly-$0 offline path.
+- **Speech (2026-07-01):** speech is a **swappable port** like every integration — default
+  `browser` (Web Speech API: STT/TTS in the client, zero install, $0, the reliable demo path);
+  `local` = server-side faster-whisper + Piper over the 16 kHz PCM contract (env-gated, offline).
 - **Architecture:** ports & adapters (hexagonal); SQLite = the mock CRM/ATS store; FastAPI app.
 
 ## Implemented (on `main`)
@@ -37,9 +40,24 @@ brain is **Claude**; speech is **local**. The **hero** feature is the **Recruitm
   - Verified end-to-end: candidate search ranked the cleared Java candidate #1, RTR captured,
     multi-channel sends hit `data/outbox/`; `/health` reports brain + adapters.
 
+- [x] [2026-07-01] **Phase 2 — HERO Voice Screening Agent** (branch `feat/phase2-voice-agent`):
+  - **Swappable speech port** (`app/speech/`): `browser` (Web Speech API, default, $0, no install)
+    + `local` (faster-whisper + Piper over the PCM contract, env-gated, lazy imports). Factory
+    picks browser-by-default; `SPEECH_MODE` switches it. Mirrors the CRM/ATS mock-vs-real pattern.
+  - **Screening brain** (`app/agents/voice_screening.py`): transport-agnostic `ScreeningSession`
+    (text in → text + structured events out) — runs a real phone screen (identity → pitch →
+    interest/availability/rate/work-auth/clearance fit → **RTR**), uses the LLM tool-loop with
+    `capture_rtr` + `end_call` tools, logs every `TranscriptTurn`, writes outcome back to `Call`.
+  - **Live dashboard + call websocket** (`app/web/`): softphone UI (candidate/job picker, mic,
+    live transcript, outcome/RTR panel, recent calls), browser STT/TTS + client-side barge-in,
+    text-input fallback when no mic STT. `/ws/call` runs the brain in a threadpool; `/api/calls`.
+  - **`scripts/demo_call.py`**: headless, deterministic, $0 (canned LLM) — screens Priya Sharma
+    for the Senior Java Developer role end-to-end, capturing an authorized RTR. Verified PASS
+    (RTR row saved, outcome `rtr_collected`, 13 transcript turns). App boot + routes + websocket
+    verified via FastAPI TestClient.
+
 ## In Progress
-- [ ] **Phase 2 — HERO Voice Screening Agent** (next): browser softphone, STT→LLM→TTS,
-  VAD barge-in, screening script, RTR capture, live dashboard, `scripts/demo_call.py`.
+- [ ] (nothing active — Phase 3 is next)
 
 ## Future Phases
 - [ ] **Phase 3 — Recruitment non-voice:** Recruiter Assistant (Boolean + search + rank),
@@ -51,11 +69,10 @@ brain is **Claude**; speech is **local**. The **hero** feature is the **Recruitm
 - [ ] **Phase 7 — Polish:** dashboard, README, recorded demo call, tests, $0 verification.
 
 ## Research
-Reports in [`research/`](research/), compiled 2026-06-30. **NOTE:** `research.py` (local Ollama)
-was unreliable this session — the desktop Ollama proxy on `:11434` hung the API and a dedicated
-`:11435` serve was unstable — so **at the owner's direction the reports were compiled via web
-search/fetch and synthesized directly, then cited**. Re-run them via `research.py` once Ollama is
-fixed (the source URLs are listed in each report).
+Reports in [`research/`](research/), compiled 2026-06-30. **DECISION (2026-07-01):** local Ollama
+is down and **dropped for this project** — all web research is now done directly (search/fetch →
+synthesize → cite), not via `research.py`. The existing reports stand; new research follows the
+direct method and still lands cited `.md` files in `research/`.
 - Vonage voice (websocket media) — `research/20260630-230001_vonage-voice-api-realtime-websocket.md`
 - Zoho CRM API (self-client OAuth) — `research/20260630-230002_zoho-crm-api-v2-self-client-oauth.md`
 - Ceipal ATS v1 API — `research/20260630-230003_ceipal-ats-v1-api.md`

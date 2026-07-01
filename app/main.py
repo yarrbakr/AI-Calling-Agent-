@@ -1,7 +1,7 @@
 """FastAPI application entrypoint.
 
-For now this exposes health + stats and a placeholder home page so we can verify
-the foundation boots. The live dashboard and call websocket arrive in Phase 2.
+Serves the live screening dashboard + call websocket (Phase 2) alongside health
+and stats. Static assets and the dashboard template live under ``app/web``.
 
 Run (from the project root, via the shared venv):
     ../.venv/Scripts/python.exe -m uvicorn app.main:app --reload
@@ -10,15 +10,18 @@ Run (from the project root, via the shared venv):
 from __future__ import annotations
 
 from contextlib import asynccontextmanager
+from pathlib import Path
 
 from fastapi import FastAPI
-from fastapi.responses import HTMLResponse
+from fastapi.staticfiles import StaticFiles
 from sqlmodel import Session, select
 
 from app.config import settings
 from app.domain import models as m
 from app.domain.db import engine, init_db
 from app.integrations.factory import get_ats, get_crm, get_email, get_messaging
+from app.speech.factory import get_speech
+from app.web.routes import router as web_router
 
 
 @asynccontextmanager
@@ -29,6 +32,13 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(title="P1 AI Calling Agent", version="0.1.0", lifespan=lifespan)
 
+app.mount(
+    "/static",
+    StaticFiles(directory=str(Path(__file__).parent / "web" / "static")),
+    name="static",
+)
+app.include_router(web_router)
+
 
 @app.get("/health")
 def health() -> dict:
@@ -37,6 +47,8 @@ def health() -> dict:
         "use_mocks": settings.use_mocks,
         "llm_backend_setting": settings.llm_backend,
         "llm_backend_active": settings.active_llm_backend(),
+        "speech_mode": settings.speech_mode,
+        "speech_engine": get_speech().name,
         "adapters": {
             "crm": get_crm().name,
             "ats": get_ats().name,
@@ -60,19 +72,3 @@ def stats() -> dict:
             "contacts": count(m.Contact),
             "calls": count(m.Call),
         }
-
-
-@app.get("/", response_class=HTMLResponse)
-def home() -> str:
-    return (
-        "<html><body style='font-family:system-ui;max-width:640px;margin:3rem auto'>"
-        "<h1>P1 — AI Calling Agent</h1>"
-        "<p>Foundation is up. CRM/ATS store, config, and mock switches are live.</p>"
-        "<ul>"
-        "<li><a href='/health'>/health</a></li>"
-        "<li><a href='/api/stats'>/api/stats</a></li>"
-        "<li><a href='/docs'>/docs</a> (OpenAPI)</li>"
-        "</ul>"
-        "<p>The live screening-call dashboard arrives in Phase 2.</p>"
-        "</body></html>"
-    )

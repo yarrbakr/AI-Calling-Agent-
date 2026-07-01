@@ -51,9 +51,14 @@ class Settings(BaseSettings):
     ollama_host: str = "http://localhost:11434"
     ollama_model: str = "deepseek-r1:14b"
 
-    # --- Local speech ---------------------------------------------------------
-    whisper_model: str = "base.en"          # faster-whisper size
-    piper_voice: str = "en_US-amy-medium"   # piper voice name
+    # --- Speech (hero voice agent) -------------------------------------------
+    # Mirrors the mock-vs-real pattern: `browser` = zero-install Web Speech API in
+    # the client (default, $0, always works for the demo); `local` = server-side
+    # faster-whisper + Piper + webrtcvad over the 16 kHz PCM telephony contract
+    # (offline, env-gated; needs the voice deps installed).
+    speech_mode: str = "browser"            # browser | local
+    whisper_model: str = "base.en"          # faster-whisper size (local mode)
+    piper_voice: str = "en_US-amy-medium"   # piper voice name (local mode)
 
     # --- Optional real CRM (Zoho) --------------------------------------------
     zoho_client_id: str = ""

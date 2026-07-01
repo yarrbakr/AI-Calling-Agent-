@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Vantage Federal Staffing — AI Voice Screening</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo">◈</span>
+      <div>
+        <h1>Vantage Federal Staffing</h1>
+        <p>AI Recruitment Voice Agent · live screening &amp; RTR capture</p>
+      </div>
+    </div>
+    <div class="badges">
+      <span class="badge" title="LLM brain in use">brain: <b>{{ llm_backend }}</b></span>
+      <span class="badge" title="Speech engine">speech: <b>{{ speech_mode }}</b></span>
+      <span class="badge dot" id="conn-badge">offline</span>
+    </div>
+  </header>
+
+  <main class="grid">
+    <!-- Left: set up + softphone -->
+    <section class="panel setup">
+      <h2>New screening call</h2>
+      <label class="field">
+        <span>Candidate</span>
+        <select id="candidate-select"></select>
+      </label>
+      <label class="field">
+        <span>Job requisition</span>
+        <select id="job-select"></select>
+      </label>
+
+      <div id="match-hint" class="hint"></div>
+
+      <button id="call-btn" class="primary">📞 Start call</button>
+      <button id="hangup-btn" class="ghost" hidden>■ End call</button>
+
+      <div class="softphone" id="softphone" hidden>
+        <div class="mic-row">
+          <button id="mic-btn" class="mic" title="Hold / click to talk (or interrupt the agent)">🎙️</button>
+          <div class="mic-meta">
+            <div id="mic-state" class="mic-state">idle</div>
+            <label class="auto"><input type="checkbox" id="auto-listen" checked /> auto-listen</label>
+          </div>
+        </div>
+        <form id="text-fallback" class="text-fallback">
+          <input id="text-input" placeholder="…or type the candidate's reply and press Enter" autocomplete="off" />
+        </form>
+      </div>
+    </section>
+
+    <!-- Center: live transcript -->
+    <section class="panel transcript-panel">
+      <h2>Live transcript</h2>
+      <div id="transcript" class="transcript">
+        <div class="empty" id="transcript-empty">Pick a candidate + job, then <b>Start call</b>. Speak your part as the candidate; the agent screens you and captures a Right&nbsp;to&nbsp;Represent.</div>
+      </div>
+    </section>
+
+    <!-- Right: outcome + recent -->
+    <aside class="panel outcome-panel">
+      <h2>Call outcome</h2>
+      <div class="outcome">
+        <div class="row"><span>Status</span><b id="o-status">—</b></div>
+        <div class="row"><span>Outcome</span><span id="o-outcome" class="chip">—</span></div>
+        <div class="row"><span>RTR</span><span id="o-rtr" class="chip">—</span></div>
+        <div class="row"><span>Interested</span><b id="o-interested">—</b></div>
+        <div class="row"><span>Availability</span><b id="o-availability">—</b></div>
+        <div class="row"><span>Rate</span><b id="o-rate">—</b></div>
+        <div class="summary"><span>Summary</span><p id="o-summary">—</p></div>
+      </div>
+
+      <h2 class="mt">Recent calls</h2>
+      <ul id="recent" class="recent"></ul>
+    </aside>
+  </main>
+
+  <script id="bootstrap" type="application/json">
+    {"candidates": {{ candidates | tojson }}, "jobs": {{ jobs | tojson }}, "speechMode": {{ speech_mode | tojson }}}
+  </script>
+  <script src="/static/app.js"></script>
+</body>
+</html>
