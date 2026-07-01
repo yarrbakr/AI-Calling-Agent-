@@ -145,20 +145,24 @@ async def call_ws(ws: WebSocket) -> None:
             kind = msg.get("type")
 
             if kind == "start":
-                ats = get_ats()
-                cand = ats.get_candidate(int(msg["candidate_id"]))
-                job = ats.get_job(int(msg["job_id"]))
-                if not cand or not job:
-                    await ws.send_json({"type": "error", "error": "unknown candidate or job"})
+                try:
+                    ats = get_ats()
+                    cand = ats.get_candidate(int(msg["candidate_id"]))
+                    job = ats.get_job(int(msg["job_id"]))
+                    if not cand or not job:
+                        await ws.send_json({"type": "error", "error": "unknown candidate or job"})
+                        continue
+                    call = create_call(cand.id, job.id)
+                    sess = ScreeningSession(
+                        candidate=cand,
+                        job=job,
+                        llm=get_llm(realtime=True),
+                        ats=ats,
+                        call_id=call.id,
+                    )
+                except Exception as exc:  # never leave the client hanging on start
+                    await ws.send_json({"type": "error", "error": f"could not start call: {exc}"})
                     continue
-                call = create_call(cand.id, job.id)
-                sess = ScreeningSession(
-                    candidate=cand,
-                    job=job,
-                    llm=get_llm(realtime=True),
-                    ats=ats,
-                    call_id=call.id,
-                )
                 await ws.send_json(
                     {
                         "type": "ready",
