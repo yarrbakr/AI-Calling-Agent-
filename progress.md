@@ -56,6 +56,12 @@ brain is **Claude**; speech is **local**. The **hero** feature is the **Recruitm
     (RTR row saved, outcome `rtr_collected`, 13 transcript turns). App boot + routes + websocket
     verified via FastAPI TestClient.
 
+- [x] [2026-07-01] **Phase 2 fix** (branch `fix/mistral-2x-llm-fallback`): Mistral adapter now
+  supports both SDK layouts (`mistralai.Mistral` 1.x / `mistralai.client.Mistral` 2.x — the
+  installed 2.5.0 moved the client under `.client`); LLM factory **degrades to canned** if a
+  provider dep is broken instead of crashing the call; websocket `start` guarded. Verified the
+  live Mistral brain + tool-use (RTR capture) end-to-end.
+
 ## In Progress
 - [ ] (nothing active — Phase 3 is next)
 

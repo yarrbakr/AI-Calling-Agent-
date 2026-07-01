@@ -21,7 +21,13 @@ class MistralLLM(LLM):
     name = "mistral"
 
     def __init__(self, api_key: str, model: str):
-        from mistralai import Mistral  # lazy import keeps the dep optional
+        # Lazy import keeps the dep optional. The client class moved between SDK
+        # majors: 1.x exports it top-level (`mistralai.Mistral`); 2.x nests the
+        # code under `mistralai.client`. Support both so either install works.
+        try:
+            from mistralai import Mistral
+        except ImportError:
+            from mistralai.client import Mistral
 
         self._client = Mistral(api_key=api_key)
         self.model = model
